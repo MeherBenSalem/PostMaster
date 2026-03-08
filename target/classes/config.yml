@@ -18,7 +18,7 @@ notifications:
   sound: true
   title-main: "&6New Mail"
   title-sub: "&fUse /mail to claim it"
-  chat-format: "&6[PostMaster] &fYou have new mail. Use &e/mail"
+  chat-format: "&6&lInbox &8»  &fYou have new mail. Use &e/mail"
   sound-key: ENTITY_EXPERIENCE_ORB_PICKUP
 
 messages:
