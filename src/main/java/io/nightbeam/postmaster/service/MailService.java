@@ -205,10 +205,17 @@ public final class MailService {
     }
 
     private void executeCommands(List<String> commands, Player player) {
-        for (String command : commands) {
-            String replaced = command.replace("%player%", player.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), replaced);
+        if (commands == null || commands.isEmpty()) {
+            return;
         }
+
+        // Folia requires command dispatch on the global region thread.
+        scheduler.runGlobalSync(() -> {
+            for (String command : commands) {
+                String replaced = command.replace("%player%", player.getName());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), replaced);
+            }
+        });
     }
 
     private void moveToHistory(MailEntry mail) {
