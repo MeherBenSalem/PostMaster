@@ -1,5 +1,5 @@
 name: PostMaster
-version: 1.0.1
+version: 1.0.2
 main: io.nightbeam.postmaster.PostMasterPlugin
 api-version: '1.20'
 folia-supported: true
@@ -17,6 +17,8 @@ commands:
 
 permissions:
   postmaster.use:
+    default: true
+  postmaster.senditem:
     default: true
   postmaster.admin:
     default: op

@@ -90,7 +90,7 @@ public final class MailCommand implements CommandExecutor, TabCompleter {
         }
 
         if (sub.equals("senditem")) {
-            if (!sender.hasPermission("postmaster.admin")) {
+            if (!sender.hasPermission("postmaster.senditem") && !sender.hasPermission("postmaster.admin")) {
                 sender.sendMessage(msg("messages.no-permission"));
                 return true;
             }
