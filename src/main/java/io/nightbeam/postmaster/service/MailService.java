@@ -212,8 +212,28 @@ public final class MailService {
         // Folia requires command dispatch on the global region thread.
         scheduler.runGlobalSync(() -> {
             for (String command : commands) {
-                String replaced = command.replace("%player%", player.getName());
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), replaced);
+                if (command == null) {
+                    continue;
+                }
+
+                String replaced = command
+                        .trim()
+                        .replace("%player%", player.getName())
+                        .replace("%uuid%", player.getUniqueId().toString());
+
+                if (replaced.isEmpty()) {
+                    continue;
+                }
+
+                // Bukkit dispatch expects command lines without a leading slash.
+                if (replaced.startsWith("/")) {
+                    replaced = replaced.substring(1);
+                }
+
+                boolean ok = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), replaced);
+                if (!ok) {
+                    plugin.getLogger().warning("Failed to run server-side reward command: " + replaced);
+                }
             }
         });
     }
