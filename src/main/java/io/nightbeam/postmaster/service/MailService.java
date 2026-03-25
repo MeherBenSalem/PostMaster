@@ -216,10 +216,7 @@ public final class MailService {
                     continue;
                 }
 
-                String replaced = command
-                        .trim()
-                        .replace("%player%", player.getName())
-                        .replace("%uuid%", player.getUniqueId().toString());
+                String replaced = replacePlaceholders(command.trim(), player);
 
                 if (replaced.isEmpty()) {
                     continue;
@@ -236,6 +233,17 @@ public final class MailService {
                 }
             }
         });
+    }
+
+    private String replacePlaceholders(String command, Player player) {
+        String playerName = player.getName();
+        String uuid = player.getUniqueId().toString();
+
+        return command
+                .replaceAll("(?i)%player%", playerName)
+                .replaceAll("(?i)%player_name%", playerName)
+                .replaceAll("(?i)%name%", playerName)
+                .replaceAll("(?i)%uuid%", uuid);
     }
 
     private void moveToHistory(MailEntry mail) {
