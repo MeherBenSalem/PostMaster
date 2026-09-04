@@ -1,5 +1,16 @@
 # PostMaster — Changelog
 
+## [1.0.7] — 2026-09-04
+
+### Changed
+- Target Paper/Folia API **26.2**
+- Route async work through Folia's async scheduler (`SchedulerAdapter`)
+
+### Added
+- Unit tests for storage type and list codec
+
+---
+
 ## [1.0.5] — 2026-04-04
 
 ### Fixed
