@@ -20,6 +20,19 @@ public final class SchedulerAdapter {
     }
 
     public void runAsync(Runnable runnable) {
+        if (folia) {
+            try {
+                Object server = Bukkit.getServer();
+                Method getAsyncScheduler = server.getClass().getMethod("getAsyncScheduler");
+                Object scheduler = getAsyncScheduler.invoke(server);
+                Method runNow = scheduler.getClass().getMethod(
+                        "runNow", Plugin.class, java.util.function.Consumer.class);
+                runNow.invoke(scheduler, plugin, (java.util.function.Consumer<?>) task -> runnable.run());
+                return;
+            } catch (ReflectiveOperationException ex) {
+                plugin.getLogger().warning("Folia async scheduler unavailable, falling back: " + ex.getMessage());
+            }
+        }
         Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
     }
 
@@ -41,9 +54,10 @@ public final class SchedulerAdapter {
             Method getScheduler = player.getClass().getMethod("getScheduler");
             Object scheduler = getScheduler.invoke(player);
             Method execute = scheduler.getClass().getMethod("execute", Plugin.class, Runnable.class, Runnable.class, long.class);
-            execute.invoke(scheduler, plugin, runnable, null, 1L);
+            execute.invoke(scheduler, plugin, runnable, null, 0L);
         } catch (ReflectiveOperationException ex) {
-            Bukkit.getScheduler().runTask(plugin, runnable);
+            plugin.getLogger().warning("Folia entity scheduler unavailable for " + player.getName() + ": " + ex.getMessage());
+            invokeGlobalFoliaTask(runnable);
         }
     }
 
